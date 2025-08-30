@@ -5,11 +5,11 @@
     "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
-    "hono": "^4.9.4",
+    "hono": "^4.9.5",
     "@merchant/auth": "workspace:*",
     "@merchant/api-config": "workspace:*"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.19"
+    "@types/bun": "*"
   }
 }

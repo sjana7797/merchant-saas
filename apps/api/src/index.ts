@@ -1,4 +1,43 @@
-import app from "./app";
+import * as productResolver from "./routes/products";
+import * as serverResolver from "./routes/server";
+import * as userResolver from "./routes/user";
+import { app } from "@getcronit/pylon";
+import { proxy } from "hono/proxy";
+import { routes } from "./routes";
+import { cors } from "hono/cors";
+
+export const graphql = {
+  Query: {
+    getProduct: productResolver.getProduct,
+    getServers: serverResolver.getServers,
+    getServerHealth: serverResolver.getServerHealth,
+    getUsers: userResolver.getUsers,
+  },
+  Mutation: {
+    addServer: serverResolver.addServer,
+  },
+};
+
+app.use(
+  "/*",
+  cors({
+    origin: ["http://localhost:3000"],
+    allowMethods: ["GET", "POST", "OPTIONS"],
+    allowHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+// Add routes
+routes.forEach((route) => {
+  app.route("/", route);
+});
+
+// Auth services
+app.on(["POST", "GET"], "/auth/:path", (c) => {
+  console.log("Proxying to Auth Service");
+  return proxy(`http://localhost:5001/api/auth/${c.req.param("path")}`);
+});
 
 Bun.serve({
   port: 5000,

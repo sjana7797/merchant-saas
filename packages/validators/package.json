@@ -1,0 +1,11 @@
+{
+  "name": "@merchant/validators",
+  "private": true,
+  "version": "0.0.1",
+  "exports": {
+    "./forms": "./src/forms/index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.1.5"
+  }
+}

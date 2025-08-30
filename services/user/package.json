@@ -7,7 +7,6 @@
     "@merchant/api-config": "workspace:*",
     "@merchant/db": "workspace:*",
     "@merchant/proto": "workspace:*",
-    "hono": "^4.9.5",
     "zod": "^4.1.5"
   },
   "devDependencies": {

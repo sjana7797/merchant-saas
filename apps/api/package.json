@@ -1,18 +1,22 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "pylon dev -c 'bun run .pylon/index.js'",
+    "build": "pylon build"
   },
   "dependencies": {
+    "@getcronit/pylon": "^2.9.5",
     "@graphql-tools/load": "^8.1.2",
     "@graphql-tools/schema": "^10.0.25",
     "@grpc/grpc-js": "^1.13.4",
+    "@merchant/db": "workspace:*",
+    "@merchant/api-config": "workspace:*",
     "@merchant/proto": "workspace:*",
     "graphql": "^16.11.0",
-    "hono": "^4.9.5",
-    "@merchant/db": "workspace:*"
+    "hono": "^4.9.5"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.19"
+    "@getcronit/pylon-dev": "^1.0.5",
+    "@types/bun": "*"
   }
 }

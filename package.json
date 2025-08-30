@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "turbo run dev --parallel",
     "build": "turbo run build",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "syncpack:fix": "syncpack fix",
+    "postinstall": "pnpm syncpack:fix"
   },
   "keywords": [],
   "author": "",
@@ -14,8 +16,9 @@
   "devDependencies": {
     "grpc-tools": "^1.13.0",
     "protoc-gen-ts": "^0.8.7",
+    "syncpack": "14.0.0-alpha.19",
     "turbo": "^2.5.6",
-    "typescript": "^5.9.2"
+    "typescript": "^5"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",

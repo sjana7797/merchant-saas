@@ -3,10 +3,14 @@ package ecom;
 
 service EcomService {
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
+  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
 }
 
 message GetProductRequest {
     string product_id = 1;
+}
+
+message GetHealthRequest {
 }
 
 message GetProductResponse {
@@ -15,4 +19,8 @@ message GetProductResponse {
     string description = 3;
     string slug = 4;
     string org_id = 5;
+}
+
+message GetHealthResponse {
+  string message = 1;
 }

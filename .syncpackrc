@@ -1,0 +1,10 @@
+{
+  "semverGroups": [
+    {
+      "packages": [
+        "@merchant/**"
+      ],
+      "isIgnored": true
+    }
+  ]
+}

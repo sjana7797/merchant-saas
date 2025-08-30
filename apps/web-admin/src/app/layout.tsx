@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@merchant/ui/globals.css";
 import ApiProvider from "@/components/api-provider";
+import TopLoader from "@merchant/ui/components/top-loader";
+import { ThemeProvider } from "@merchant/ui/providers/theme-provider";
 
 const font = Inter({
   variable: "--font-inter",
@@ -21,7 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${font.variable} ${font.variable} antialiased`}>
-        <ApiProvider>{children}</ApiProvider>
+        <TopLoader />
+        <ApiProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </ApiProvider>
       </body>
     </html>
   );
