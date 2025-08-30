@@ -1,0 +1,12 @@
+node_modules
+.turbo
+
+.next
+
+# Environment files except for example
+.env*
+!.env.example
+
+dist
+
+build

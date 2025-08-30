@@ -1,0 +1,16 @@
+{
+  "name": "ecom",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@merchant/proto": "workspace:*",
+    "@merchant/api-config": "workspace:*",
+    "@merchant/db": "workspace:*",
+    "hono": "^4.9.5",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.19"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "api",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@graphql-tools/load": "^8.1.2",
+    "@graphql-tools/schema": "^10.0.25",
+    "@grpc/grpc-js": "^1.13.4",
+    "@merchant/proto": "workspace:*",
+    "graphql": "^16.11.0",
+    "hono": "^4.9.5"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.19"
+  }
+}
