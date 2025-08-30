@@ -9,7 +9,8 @@
     "@grpc/grpc-js": "^1.13.4",
     "@merchant/proto": "workspace:*",
     "graphql": "^16.11.0",
-    "hono": "^4.9.5"
+    "hono": "^4.9.5",
+    "@merchant/db": "workspace:*"
   },
   "devDependencies": {
     "@types/bun": "^1.2.19"

@@ -1,6 +1,8 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { EcomServiceClient } from "@merchant/proto/ecom";
 import * as grpc from "@grpc/grpc-js";
+import { db } from "@merchant/db";
+import { servers } from "@merchant/db/schema/servers";
 
 const ecomClient = new EcomServiceClient(
   "localhost:50052",
@@ -16,8 +18,18 @@ const typeDefs = `
     orgId: String!
   }
 
+  type Server {
+    id: String!
+    name: String!
+    description: String
+    healthUrl: String!
+    createdAt: String!
+    updatedAt: String!
+  }
+
   type Query {
     getProduct(productId: String!): Product
+    getServers: [Server]
   }
 `;
 
@@ -34,6 +46,12 @@ const resolvers = {
           }
         });
       });
+    },
+    getServers: async () => {
+      const serversResults = await db.select().from(servers);
+      console.log("Servers:", serversResults);
+
+      return serversResults;
     },
   },
 };
