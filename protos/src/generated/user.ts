@@ -24,6 +24,11 @@ export const protobufPackage = "user";
 export interface GetUsersRequest {
   limit: number;
   page: number;
+}
+
+export interface GetCustomersRequest {
+  limit: number;
+  page: number;
   orgId: string;
 }
 
@@ -35,6 +40,10 @@ export interface GetUsersResponse {
 }
 
 export interface GetUserRequest {
+  userId: string;
+}
+
+export interface GetCustomerRequest {
   userId: string;
   orgId: string;
 }
@@ -48,11 +57,87 @@ export interface GetUserResponse {
 }
 
 function createBaseGetUsersRequest(): GetUsersRequest {
-  return { limit: 0, page: 0, orgId: "" };
+  return { limit: 0, page: 0 };
 }
 
 export const GetUsersRequest: MessageFns<GetUsersRequest> = {
   encode(message: GetUsersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
+    }
+    if (message.page !== 0) {
+      writer.uint32(16).int32(message.page);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetUsersRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.limit = reader.int32();
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetUsersRequest {
+    return {
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+    };
+  },
+
+  toJSON(message: GetUsersRequest): unknown {
+    const obj: any = {};
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    return obj;
+  },
+
+  create(base?: DeepPartial<GetUsersRequest>): GetUsersRequest {
+    return GetUsersRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetUsersRequest>): GetUsersRequest {
+    const message = createBaseGetUsersRequest();
+    message.limit = object.limit ?? 0;
+    message.page = object.page ?? 0;
+    return message;
+  },
+};
+
+function createBaseGetCustomersRequest(): GetCustomersRequest {
+  return { limit: 0, page: 0, orgId: "" };
+}
+
+export const GetCustomersRequest: MessageFns<GetCustomersRequest> = {
+  encode(message: GetCustomersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.limit !== 0) {
       writer.uint32(8).int32(message.limit);
     }
@@ -65,10 +150,10 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetUsersRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCustomersRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUsersRequest();
+    const message = createBaseGetCustomersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -105,7 +190,7 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
     return message;
   },
 
-  fromJSON(object: any): GetUsersRequest {
+  fromJSON(object: any): GetCustomersRequest {
     return {
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
       page: isSet(object.page) ? globalThis.Number(object.page) : 0,
@@ -113,7 +198,7 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
     };
   },
 
-  toJSON(message: GetUsersRequest): unknown {
+  toJSON(message: GetCustomersRequest): unknown {
     const obj: any = {};
     if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
@@ -127,11 +212,11 @@ export const GetUsersRequest: MessageFns<GetUsersRequest> = {
     return obj;
   },
 
-  create(base?: DeepPartial<GetUsersRequest>): GetUsersRequest {
-    return GetUsersRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<GetCustomersRequest>): GetCustomersRequest {
+    return GetCustomersRequest.fromPartial(base ?? {});
   },
-  fromPartial(object: DeepPartial<GetUsersRequest>): GetUsersRequest {
-    const message = createBaseGetUsersRequest();
+  fromPartial(object: DeepPartial<GetCustomersRequest>): GetCustomersRequest {
+    const message = createBaseGetCustomersRequest();
     message.limit = object.limit ?? 0;
     message.page = object.page ?? 0;
     message.orgId = object.orgId ?? "";
@@ -248,11 +333,69 @@ export const GetUsersResponse: MessageFns<GetUsersResponse> = {
 };
 
 function createBaseGetUserRequest(): GetUserRequest {
-  return { userId: "", orgId: "" };
+  return { userId: "" };
 }
 
 export const GetUserRequest: MessageFns<GetUserRequest> = {
   encode(message: GetUserRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetUserRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetUserRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetUserRequest {
+    return { userId: isSet(object.userId) ? globalThis.String(object.userId) : "" };
+  },
+
+  toJSON(message: GetUserRequest): unknown {
+    const obj: any = {};
+    if (message.userId !== "") {
+      obj.userId = message.userId;
+    }
+    return obj;
+  },
+
+  create(base?: DeepPartial<GetUserRequest>): GetUserRequest {
+    return GetUserRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetUserRequest>): GetUserRequest {
+    const message = createBaseGetUserRequest();
+    message.userId = object.userId ?? "";
+    return message;
+  },
+};
+
+function createBaseGetCustomerRequest(): GetCustomerRequest {
+  return { userId: "", orgId: "" };
+}
+
+export const GetCustomerRequest: MessageFns<GetCustomerRequest> = {
+  encode(message: GetCustomerRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.userId !== "") {
       writer.uint32(10).string(message.userId);
     }
@@ -262,10 +405,10 @@ export const GetUserRequest: MessageFns<GetUserRequest> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetUserRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCustomerRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUserRequest();
+    const message = createBaseGetCustomerRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -294,14 +437,14 @@ export const GetUserRequest: MessageFns<GetUserRequest> = {
     return message;
   },
 
-  fromJSON(object: any): GetUserRequest {
+  fromJSON(object: any): GetCustomerRequest {
     return {
       userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
       orgId: isSet(object.orgId) ? globalThis.String(object.orgId) : "",
     };
   },
 
-  toJSON(message: GetUserRequest): unknown {
+  toJSON(message: GetCustomerRequest): unknown {
     const obj: any = {};
     if (message.userId !== "") {
       obj.userId = message.userId;
@@ -312,11 +455,11 @@ export const GetUserRequest: MessageFns<GetUserRequest> = {
     return obj;
   },
 
-  create(base?: DeepPartial<GetUserRequest>): GetUserRequest {
-    return GetUserRequest.fromPartial(base ?? {});
+  create(base?: DeepPartial<GetCustomerRequest>): GetCustomerRequest {
+    return GetCustomerRequest.fromPartial(base ?? {});
   },
-  fromPartial(object: DeepPartial<GetUserRequest>): GetUserRequest {
-    const message = createBaseGetUserRequest();
+  fromPartial(object: DeepPartial<GetCustomerRequest>): GetCustomerRequest {
+    const message = createBaseGetCustomerRequest();
     message.userId = object.userId ?? "";
     message.orgId = object.orgId ?? "";
     return message;
@@ -467,11 +610,31 @@ export const UserServiceService = {
     responseSerialize: (value: GetUserResponse): Buffer => Buffer.from(GetUserResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetUserResponse => GetUserResponse.decode(value),
   },
+  getCustomers: {
+    path: "/user.UserService/GetCustomers",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetCustomersRequest): Buffer => Buffer.from(GetCustomersRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetCustomersRequest => GetCustomersRequest.decode(value),
+    responseSerialize: (value: GetUsersResponse): Buffer => Buffer.from(GetUsersResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetUsersResponse => GetUsersResponse.decode(value),
+  },
+  getCustomer: {
+    path: "/user.UserService/GetCustomer",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetCustomerRequest): Buffer => Buffer.from(GetCustomerRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetCustomerRequest => GetCustomerRequest.decode(value),
+    responseSerialize: (value: GetUserResponse): Buffer => Buffer.from(GetUserResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetUserResponse => GetUserResponse.decode(value),
+  },
 } as const;
 
 export interface UserServiceServer extends UntypedServiceImplementation {
   getUsers: handleUnaryCall<GetUsersRequest, GetUsersResponse>;
   getUser: handleUnaryCall<GetUserRequest, GetUserResponse>;
+  getCustomers: handleUnaryCall<GetCustomersRequest, GetUsersResponse>;
+  getCustomer: handleUnaryCall<GetCustomerRequest, GetUserResponse>;
 }
 
 export interface UserServiceClient extends Client {
@@ -501,6 +664,36 @@ export interface UserServiceClient extends Client {
   ): ClientUnaryCall;
   getUser(
     request: GetUserRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+  ): ClientUnaryCall;
+  getCustomers(
+    request: GetCustomersRequest,
+    callback: (error: ServiceError | null, response: GetUsersResponse) => void,
+  ): ClientUnaryCall;
+  getCustomers(
+    request: GetCustomersRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetUsersResponse) => void,
+  ): ClientUnaryCall;
+  getCustomers(
+    request: GetCustomersRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetUsersResponse) => void,
+  ): ClientUnaryCall;
+  getCustomer(
+    request: GetCustomerRequest,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+  ): ClientUnaryCall;
+  getCustomer(
+    request: GetCustomerRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+  ): ClientUnaryCall;
+  getCustomer(
+    request: GetCustomerRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetUserResponse) => void,
