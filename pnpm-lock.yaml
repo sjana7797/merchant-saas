@@ -339,6 +339,28 @@ importers:
         specifier: ^1.2.19
         version: 1.2.21(@types/react@19.1.11)
 
+  services/user:
+    dependencies:
+      '@merchant/api-config':
+        specifier: workspace:*
+        version: link:../../packages/api-config
+      '@merchant/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@merchant/proto':
+        specifier: workspace:*
+        version: link:../../protos
+      hono:
+        specifier: ^4.9.5
+        version: 4.9.5
+      zod:
+        specifier: ^4.1.5
+        version: 4.1.5
+    devDependencies:
+      '@types/bun':
+        specifier: latest
+        version: 1.2.21(@types/react@19.1.11)
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

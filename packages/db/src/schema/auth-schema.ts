@@ -4,6 +4,7 @@ import {
   timestamp,
   boolean,
   integer,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -139,3 +140,18 @@ export const jwkss = pgTable("jwkss", {
   privateKey: text("private_key").notNull(),
   createdAt: timestamp("created_at").notNull(),
 });
+
+export const customers = pgTable(
+  "customers",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    orgId: text("org_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.orgId] })]
+);
