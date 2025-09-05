@@ -42,12 +42,27 @@ export interface GetProductsResponse {
   nextCursor?: number | undefined;
 }
 
+export interface GetCartRequest {
+  userId: string;
+  orgId: string;
+  cartId: string;
+}
+
+export interface GetCartResponse {
+  id: string;
+  userId: string;
+  orgId: string;
+}
+
 function createBaseGetProductRequest(): GetProductRequest {
   return { productId: "" };
 }
 
 export const GetProductRequest: MessageFns<GetProductRequest> = {
-  encode(message: GetProductRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GetProductRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.productId !== "") {
       writer.uint32(10).string(message.productId);
     }
@@ -55,7 +70,8 @@ export const GetProductRequest: MessageFns<GetProductRequest> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): GetProductRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProductRequest();
     while (reader.pos < end) {
@@ -79,7 +95,11 @@ export const GetProductRequest: MessageFns<GetProductRequest> = {
   },
 
   fromJSON(object: any): GetProductRequest {
-    return { productId: isSet(object.productId) ? globalThis.String(object.productId) : "" };
+    return {
+      productId: isSet(object.productId)
+        ? globalThis.String(object.productId)
+        : "",
+    };
   },
 
   toJSON(message: GetProductRequest): unknown {
@@ -105,7 +125,10 @@ function createBaseGetProductResponse(): GetProductResponse {
 }
 
 export const GetProductResponse: MessageFns<GetProductResponse> = {
-  encode(message: GetProductResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GetProductResponse,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -124,8 +147,12 @@ export const GetProductResponse: MessageFns<GetProductResponse> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetProductResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): GetProductResponse {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProductResponse();
     while (reader.pos < end) {
@@ -184,7 +211,9 @@ export const GetProductResponse: MessageFns<GetProductResponse> = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      description: isSet(object.description)
+        ? globalThis.String(object.description)
+        : "",
       slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
       orgId: isSet(object.orgId) ? globalThis.String(object.orgId) : "",
     };
@@ -229,7 +258,10 @@ function createBaseGetProductsResponse(): GetProductsResponse {
 }
 
 export const GetProductsResponse: MessageFns<GetProductsResponse> = {
-  encode(message: GetProductsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: GetProductsResponse,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
     for (const v of message.products) {
       GetProductResponse.encode(v!, writer.uint32(10).fork()).join();
     }
@@ -245,8 +277,12 @@ export const GetProductsResponse: MessageFns<GetProductsResponse> = {
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetProductsResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number,
+  ): GetProductsResponse {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProductsResponse();
     while (reader.pos < end) {
@@ -257,7 +293,9 @@ export const GetProductsResponse: MessageFns<GetProductsResponse> = {
             break;
           }
 
-          message.products.push(GetProductResponse.decode(reader, reader.uint32()));
+          message.products.push(
+            GetProductResponse.decode(reader, reader.uint32()),
+          );
           continue;
         }
         case 2: {
@@ -298,9 +336,13 @@ export const GetProductsResponse: MessageFns<GetProductsResponse> = {
       products: globalThis.Array.isArray(object?.products)
         ? object.products.map((e: any) => GetProductResponse.fromJSON(e))
         : [],
-      totalCount: isSet(object.totalCount) ? globalThis.Number(object.totalCount) : 0,
+      totalCount: isSet(object.totalCount)
+        ? globalThis.Number(object.totalCount)
+        : 0,
       page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      nextCursor: isSet(object.nextCursor) ? globalThis.Number(object.nextCursor) : undefined,
+      nextCursor: isSet(object.nextCursor)
+        ? globalThis.Number(object.nextCursor)
+        : undefined,
     };
   },
 
@@ -326,10 +368,203 @@ export const GetProductsResponse: MessageFns<GetProductsResponse> = {
   },
   fromPartial(object: DeepPartial<GetProductsResponse>): GetProductsResponse {
     const message = createBaseGetProductsResponse();
-    message.products = object.products?.map((e) => GetProductResponse.fromPartial(e)) || [];
+    message.products =
+      object.products?.map((e) => GetProductResponse.fromPartial(e)) || [];
     message.totalCount = object.totalCount ?? 0;
     message.page = object.page ?? 0;
     message.nextCursor = object.nextCursor ?? undefined;
+    return message;
+  },
+};
+
+function createBaseGetCartRequest(): GetCartRequest {
+  return { userId: "", orgId: "", cartId: "" };
+}
+
+export const GetCartRequest: MessageFns<GetCartRequest> = {
+  encode(
+    message: GetCartRequest,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.userId !== "") {
+      writer.uint32(10).string(message.userId);
+    }
+    if (message.orgId !== "") {
+      writer.uint32(18).string(message.orgId);
+    }
+    if (message.cartId !== "") {
+      writer.uint32(26).string(message.cartId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCartRequest {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCartRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.cartId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetCartRequest {
+    return {
+      userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
+      orgId: isSet(object.orgId) ? globalThis.String(object.orgId) : "",
+      cartId: isSet(object.cartId) ? globalThis.String(object.cartId) : "",
+    };
+  },
+
+  toJSON(message: GetCartRequest): unknown {
+    const obj: any = {};
+    if (message.userId !== "") {
+      obj.userId = message.userId;
+    }
+    if (message.orgId !== "") {
+      obj.orgId = message.orgId;
+    }
+    if (message.cartId !== "") {
+      obj.cartId = message.cartId;
+    }
+    return obj;
+  },
+
+  create(base?: DeepPartial<GetCartRequest>): GetCartRequest {
+    return GetCartRequest.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCartRequest>): GetCartRequest {
+    const message = createBaseGetCartRequest();
+    message.userId = object.userId ?? "";
+    message.orgId = object.orgId ?? "";
+    message.cartId = object.cartId ?? "";
+    return message;
+  },
+};
+
+function createBaseGetCartResponse(): GetCartResponse {
+  return { id: "", userId: "", orgId: "" };
+}
+
+export const GetCartResponse: MessageFns<GetCartResponse> = {
+  encode(
+    message: GetCartResponse,
+    writer: BinaryWriter = new BinaryWriter(),
+  ): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.userId !== "") {
+      writer.uint32(18).string(message.userId);
+    }
+    if (message.orgId !== "") {
+      writer.uint32(26).string(message.orgId);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetCartResponse {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
+    const end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetCartResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.userId = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.orgId = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetCartResponse {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
+      orgId: isSet(object.orgId) ? globalThis.String(object.orgId) : "",
+    };
+  },
+
+  toJSON(message: GetCartResponse): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.userId !== "") {
+      obj.userId = message.userId;
+    }
+    if (message.orgId !== "") {
+      obj.orgId = message.orgId;
+    }
+    return obj;
+  },
+
+  create(base?: DeepPartial<GetCartResponse>): GetCartResponse {
+    return GetCartResponse.fromPartial(base ?? {});
+  },
+  fromPartial(object: DeepPartial<GetCartResponse>): GetCartResponse {
+    const message = createBaseGetCartResponse();
+    message.id = object.id ?? "";
+    message.userId = object.userId ?? "";
+    message.orgId = object.orgId ?? "";
     return message;
   },
 };
@@ -340,28 +575,53 @@ export const EcomServiceService = {
     path: "/ecom.EcomService/GetProduct",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetProductRequest): Buffer => Buffer.from(GetProductRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetProductRequest => GetProductRequest.decode(value),
-    responseSerialize: (value: GetProductResponse): Buffer => Buffer.from(GetProductResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetProductResponse => GetProductResponse.decode(value),
+    requestSerialize: (value: GetProductRequest): Buffer =>
+      Buffer.from(GetProductRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetProductRequest =>
+      GetProductRequest.decode(value),
+    responseSerialize: (value: GetProductResponse): Buffer =>
+      Buffer.from(GetProductResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetProductResponse =>
+      GetProductResponse.decode(value),
   },
   getProducts: {
     path: "/ecom.EcomService/GetProducts",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: PaginatedRequest): Buffer => Buffer.from(PaginatedRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): PaginatedRequest => PaginatedRequest.decode(value),
-    responseSerialize: (value: GetProductsResponse): Buffer => Buffer.from(GetProductsResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetProductsResponse => GetProductsResponse.decode(value),
+    requestSerialize: (value: PaginatedRequest): Buffer =>
+      Buffer.from(PaginatedRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PaginatedRequest =>
+      PaginatedRequest.decode(value),
+    responseSerialize: (value: GetProductsResponse): Buffer =>
+      Buffer.from(GetProductsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetProductsResponse =>
+      GetProductsResponse.decode(value),
   },
   getHealth: {
     path: "/ecom.EcomService/GetHealth",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetHealthRequest): Buffer => Buffer.from(GetHealthRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetHealthRequest => GetHealthRequest.decode(value),
-    responseSerialize: (value: GetHealthResponse): Buffer => Buffer.from(GetHealthResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetHealthResponse => GetHealthResponse.decode(value),
+    requestSerialize: (value: GetHealthRequest): Buffer =>
+      Buffer.from(GetHealthRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetHealthRequest =>
+      GetHealthRequest.decode(value),
+    responseSerialize: (value: GetHealthResponse): Buffer =>
+      Buffer.from(GetHealthResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetHealthResponse =>
+      GetHealthResponse.decode(value),
+  },
+  getCart: {
+    path: "/ecom.EcomService/GetCart",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetCartRequest): Buffer =>
+      Buffer.from(GetCartRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): GetCartRequest =>
+      GetCartRequest.decode(value),
+    responseSerialize: (value: GetCartResponse): Buffer =>
+      Buffer.from(GetCartResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetCartResponse =>
+      GetCartResponse.decode(value),
   },
 } as const;
 
@@ -369,38 +629,57 @@ export interface EcomServiceServer extends UntypedServiceImplementation {
   getProduct: handleUnaryCall<GetProductRequest, GetProductResponse>;
   getProducts: handleUnaryCall<PaginatedRequest, GetProductsResponse>;
   getHealth: handleUnaryCall<GetHealthRequest, GetHealthResponse>;
+  getCart: handleUnaryCall<GetCartRequest, GetCartResponse>;
 }
 
 export interface EcomServiceClient extends Client {
   getProduct(
     request: GetProductRequest,
-    callback: (error: ServiceError | null, response: GetProductResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetProductResponse,
+    ) => void,
   ): ClientUnaryCall;
   getProduct(
     request: GetProductRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetProductResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetProductResponse,
+    ) => void,
   ): ClientUnaryCall;
   getProduct(
     request: GetProductRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetProductResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetProductResponse,
+    ) => void,
   ): ClientUnaryCall;
   getProducts(
     request: PaginatedRequest,
-    callback: (error: ServiceError | null, response: GetProductsResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetProductsResponse,
+    ) => void,
   ): ClientUnaryCall;
   getProducts(
     request: PaginatedRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetProductsResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetProductsResponse,
+    ) => void,
   ): ClientUnaryCall;
   getProducts(
     request: PaginatedRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetProductsResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetProductsResponse,
+    ) => void,
   ): ClientUnaryCall;
   getHealth(
     request: GetHealthRequest,
@@ -416,22 +695,55 @@ export interface EcomServiceClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetHealthResponse) => void,
+  ): ClientUnaryCall;
+  getCart(
+    request: GetCartRequest,
+    callback: (error: ServiceError | null, response: GetCartResponse) => void,
+  ): ClientUnaryCall;
+  getCart(
+    request: GetCartRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetCartResponse) => void,
+  ): ClientUnaryCall;
+  getCart(
+    request: GetCartRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetCartResponse) => void,
   ): ClientUnaryCall;
 }
 
-export const EcomServiceClient = makeGenericClientConstructor(EcomServiceService, "ecom.EcomService") as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): EcomServiceClient;
+export const EcomServiceClient = makeGenericClientConstructor(
+  EcomServiceService,
+  "ecom.EcomService",
+) as unknown as {
+  new (
+    address: string,
+    credentials: ChannelCredentials,
+    options?: Partial<ClientOptions>,
+  ): EcomServiceClient;
   service: typeof EcomServiceService;
   serviceName: string;
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+    ? globalThis.Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>;
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

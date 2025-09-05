@@ -11,6 +11,18 @@
     },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "proto:gen": {
+      "cache": false,
+      "persistent": false
+    },
+    "db:migrate": {
+      "cache": false,
+      "persistent": false
+    },
+    "db:generate": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

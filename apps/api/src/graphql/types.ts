@@ -56,3 +56,9 @@ export type ServerStatusResponse = {
 export type ServerStatusRequest = {
   id: string;
 };
+
+export type GetCartRequest = {
+  userId: string;
+  orgId: string;
+  cartId: string;
+};

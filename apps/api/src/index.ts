@@ -1,6 +1,7 @@
 import * as productResolver from "./graphql/products";
 import * as serverResolver from "./graphql/server";
 import * as userResolver from "./graphql/user";
+import * as cartResolver from "./graphql/cart";
 import { app } from "@getcronit/pylon";
 import { proxy } from "hono/proxy";
 import { routes } from "./routes";
@@ -9,10 +10,10 @@ import { Logger, httpStatusCodes } from "@merchant/api-config";
 
 export const graphql = {
   Query: {
-    getProduct: productResolver.getProduct,
-    getServers: serverResolver.getServers,
-    getServerHealth: serverResolver.getServerHealth,
-    getUsers: userResolver.getUsers,
+    ...productResolver,
+    ...serverResolver,
+    ...userResolver,
+    ...cartResolver,
   },
   Mutation: {
     addServer: serverResolver.addServer,
@@ -26,7 +27,7 @@ app.use(
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-  })
+  }),
 );
 
 // Add routes

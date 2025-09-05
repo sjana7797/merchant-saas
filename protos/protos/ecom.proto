@@ -8,6 +8,7 @@ service EcomService {
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
   rpc GetProducts(paginated.PaginatedRequest) returns (GetProductsResponse);
   rpc GetHealth(health.GetHealthRequest) returns (health.GetHealthResponse);
+  rpc GetCart(GetCartRequest) returns (GetCartResponse);
 }
 
 message GetProductRequest {
@@ -27,4 +28,18 @@ message GetProductsResponse {
     int32 total_count = 2;
     int32 page = 3;
     optional int32  next_cursor = 4;
+}
+
+
+message GetCartRequest {
+    string user_id = 1;
+    string org_id = 2;
+    string cart_id = 3;
+}
+
+
+message GetCartResponse {
+    string id = 1;
+    string user_id = 2;
+    string org_id = 3;
 }

@@ -1,10 +1,11 @@
 import { Product } from "@/graphql/types";
 import { ecomClient } from "@/utils/client";
+import { Context } from "@getcronit/pylon";
 import { httpStatusCodes, Logger } from "@merchant/api-config";
 import { GetProductRequest } from "@merchant/proto/ecom";
 
 export async function getProduct(
-  getProductRequest: GetProductRequest
+  getProductRequest: GetProductRequest,
 ): Promise<Product> {
   const { productId } = getProductRequest;
   return new Promise((resolve, reject) => {
