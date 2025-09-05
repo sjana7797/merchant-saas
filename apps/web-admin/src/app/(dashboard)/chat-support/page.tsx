@@ -142,7 +142,7 @@ function ChatSupport() {
   };
 
   return (
-    <div className="flex h-full w-full">
+    <main className="flex h-full w-full max-h-[calc(100vh-4rem)] flex-1">
       <div className="flex flex-1">
         {/* Tickets List */}
         <div className="w-80 border-r border-border bg-card">
@@ -161,7 +161,7 @@ function ChatSupport() {
             </div>
           </div>
 
-          <ScrollArea className="h-[calc(100vh-140px)]">
+          <ScrollArea className="h-[calc(100vh-204px)]">
             <div className="p-2">
               {mockTickets.map((ticket) => (
                 <Card
@@ -300,7 +300,7 @@ function ChatSupport() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

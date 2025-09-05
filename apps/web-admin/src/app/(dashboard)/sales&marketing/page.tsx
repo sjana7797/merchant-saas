@@ -104,7 +104,7 @@ export default function SalesMarketingInterface() {
 
   return (
     <>
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden max-h-[calc(100vh-4rem)]">
         {/* Header */}
         <div className="border-b border-border bg-background px-6 py-4">
           <div className="flex items-center justify-between">
