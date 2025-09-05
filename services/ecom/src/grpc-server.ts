@@ -1,6 +1,6 @@
 import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { EcomServiceService } from "@merchant/proto/ecom";
-import { impl } from "./routes";
+import { impl } from "./methods";
 
 export function startGrpcServer(port = 50052) {
   const server = new Server();

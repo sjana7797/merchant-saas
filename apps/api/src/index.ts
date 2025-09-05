@@ -1,6 +1,6 @@
-import * as productResolver from "./routes/products";
-import * as serverResolver from "./routes/server";
-import * as userResolver from "./routes/user";
+import * as productResolver from "./graphql/products";
+import * as serverResolver from "./graphql/server";
+import * as userResolver from "./graphql/user";
 import { app } from "@getcronit/pylon";
 import { proxy } from "hono/proxy";
 import { routes } from "./routes";

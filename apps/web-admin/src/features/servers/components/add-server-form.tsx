@@ -23,6 +23,13 @@ import { zodResolver, useForm, useFormContext } from "@merchant/ui/lib/form";
 import { useDialog } from "@merchant/ui/hooks/use-dialog";
 import { AddServerSchema, addServer } from "@merchant/validators/forms";
 import { api } from "@/features/servers/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@merchant/ui/components/select";
 
 function AddServerForm() {
   const addServerForm = useForm<AddServerSchema>({
@@ -66,15 +73,22 @@ const AddServerFormComponent = ({
   const formContext = useFormContext<AddServerSchema>();
   const { refetch: refetchServers } = api.useGetServers();
 
-  const { mutateAsync: addServerMutation } = api.useAddServer();
+  const { mutateAsync: addServerMutation, isPending } = api.useAddServer();
 
   const handleSubmit = async (data: AddServerSchema) => {
     try {
-      await addServerMutation(data);
+      const server = await addServerMutation(data);
+
+      if (!server) {
+        throw new Error("Failed to add server");
+      }
+
       refetchServers();
       formContext.reset();
       closeDialog();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const cancelForm = () => {
@@ -119,10 +133,10 @@ const AddServerFormComponent = ({
         />
         <FormField
           control={formContext.control}
-          name="healthUrl"
+          name="url"
           render={({ field }) => (
             <FormItem className="grid gap-3">
-              <FormLabel>Health URL</FormLabel>
+              <FormLabel>URL</FormLabel>
               <FormControl>
                 <Input placeholder="server" {...field} />
               </FormControl>
@@ -133,8 +147,37 @@ const AddServerFormComponent = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={formContext.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem className="grid gap-3">
+              <FormLabel>Select Type</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.keys(addServer.shape.type.enum).map((serverType) => (
+                    <SelectItem key={serverType} value={serverType}>
+                      {serverType}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                This is your public display name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="grid grid-col-1 md:grid-cols-2 gap-2">
-          <Button>Add Server</Button>
+          <Button disabled={isPending} loading={isPending}>
+            Add Server
+          </Button>
           <Button variant="secondary" onClick={cancelForm} type="button">
             Cancel
           </Button>

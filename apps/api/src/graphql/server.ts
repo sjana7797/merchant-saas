@@ -15,22 +15,23 @@ export async function getServers(): Promise<Server[]> {
   return serversResults;
 }
 
-export async function addServer(serverRequest: ServerRequest): Promise<Server> {
+export async function addServer(
+  serverRequest: ServerRequest
+): Promise<Server | null> {
   const { server } = serverRequest;
-  return new Promise(async (resolve, reject) => {
-    try {
-      const serverResult = await db.insert(servers).values(server).returning();
 
-      if (!serverResult.length) {
-        reject("Failed to Add Server");
-      }
+  try {
+    const serverResult = await db.insert(servers).values(server).returning();
 
-      resolve(serverResult.at(0)!);
-    } catch (error) {
-      console.error(error);
-      reject(error);
+    if (!serverResult.length) {
+      throw new Error("Failed to Add Server");
     }
-  });
+
+    return serverResult.at(0)!;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 export const getServerHealth = async (

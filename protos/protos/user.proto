@@ -7,6 +7,7 @@ service UserService {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc GetCustomers(GetCustomersRequest) returns (GetUsersResponse);
   rpc GetCustomer(GetCustomerRequest) returns (GetUserResponse);
+  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
 }
 
 message GetUsersRequest {
@@ -43,4 +44,13 @@ message GetUserResponse {
     string email = 3;
     string created_at = 4;
     string updated_at = 5;
+}
+
+
+message GetHealthRequest {
+}
+
+
+message GetHealthResponse {
+  string message = 1;
 }

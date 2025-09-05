@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@merchant/ui/components/card";
-import { Server } from "../types";
+import { Server } from "@merchant/db/types";
 import { RefreshCcw, Loader2, ServerIcon } from "lucide-react";
 import { api } from "../api";
 import Render from "@merchant/ui/components/render";

@@ -9,10 +9,14 @@ export class GRPCHealth implements ServerHealth {
   constructor(private port: number) {}
 
   async getHealth() {
-    const client = servers[this.port];
+    const client = servers[this.port as keyof typeof servers];
 
-    return client.getProduct(_, (err, response) => {
-      return !!err;
+    return new Promise<boolean>((resolve) => {
+      client.getHealth({}, (err, response) => {
+        const status = !err && response?.message === "OK";
+        console.log(`Health check for port ${this.port}:`, status);
+        resolve(status);
+      });
     });
   }
 }
@@ -42,7 +46,7 @@ export class ServerService {
   }
 
   private urlBuilder(server: Server): string {
-    return `${server.host}:${server.port}/health`;
+    return `http://${server.host}:${server.port}/health`;
   }
 
   async getHealth() {

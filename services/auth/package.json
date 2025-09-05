@@ -10,6 +10,6 @@
     "@merchant/api-config": "workspace:*"
   },
   "devDependencies": {
-    "@types/bun": "*"
+    "@types/bun": "^1.2.19"
   }
 }

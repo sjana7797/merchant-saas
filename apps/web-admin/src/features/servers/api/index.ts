@@ -1,35 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/graphql-client";
-import { gql } from "graphql-request";
-import { Server } from "../types";
+import { Server } from "@merchant/db/types";
 import { useState } from "react";
 import { AddServerSchema } from "@merchant/validators/forms";
-
-const GET_SERVERS_QUERY = gql`
-  query GetServers {
-    getServers {
-      id
-      name
-      description
-      healthUrl
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const ADD_SERVER_MUTATION = (server: AddServerSchema) => gql`
-  mutation AddServer {
-    addServer(server: { name: "${server.name}", healthUrl: "${server.healthUrl}", description: "${server.description}" }) {
-      id
-      name
-      description
-      healthUrl
-      createdAt
-      updatedAt
-    }
-  }
-`;
+import {
+  ADD_SERVER_MUTATION,
+  GET_SERVER_HEALTH_QUERY,
+  GET_SERVERS_QUERY,
+} from "./gql";
 
 const useGetServers = () => {
   return useQuery({
@@ -49,18 +27,15 @@ const useGetServerStatus = (id: string) => {
   const { refetch, isLoading, isRefetching } = useQuery({
     queryKey: ["status", id],
     queryFn: async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:5000/server/status/" + id
-        );
-        const data = await response.json();
+      const data = await client.request<{
+        getServerHealth: {
+          status: boolean;
+        };
+      }>(GET_SERVER_HEALTH_QUERY(id));
 
-        cons;
-      } catch (error) {
-        setStatus(false);
-      }
+      setStatus(data.getServerHealth.status);
     },
-    refetchInterval: 10 * 60 * 1000,
+    refetchInterval: false,
   });
 
   return {
@@ -73,12 +48,25 @@ const useGetServerStatus = (id: string) => {
 const useAddServer = () => {
   return useMutation({
     mutationFn: async (server: AddServerSchema) => {
-      console.log(server);
-      const data = await client.request<{
-        addServer: Server | null;
-      }>(ADD_SERVER_MUTATION(server));
+      try {
+        const { hostname, port } = new URL(server.url);
+        const data = await client.request<{
+          addServer: Server | null;
+        }>(
+          ADD_SERVER_MUTATION({
+            name: server.name,
+            host: hostname,
+            port: Number(port),
+            type: server.type,
+            description: server.description,
+          })
+        );
 
-      return data.addServer;
+        return data.addServer;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
     },
   });
 };

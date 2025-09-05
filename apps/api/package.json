@@ -1,7 +1,7 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "pylon dev -c 'bun run .pylon/index.js'",
+    "dev": "pylon dev -c \"bun run .pylon/index.js\"",
     "build": "pylon build"
   },
   "dependencies": {
@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "@getcronit/pylon-dev": "^1.0.5",
-    "@types/bun": "*"
+    "@types/bun": "^1.2.19"
   }
 }

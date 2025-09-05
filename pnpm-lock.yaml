@@ -65,11 +65,14 @@ importers:
         specifier: ^1.0.5
         version: 1.0.5(@types/node@22.18.0)(hono@4.9.5)(typescript@5.9.2)
       '@types/bun':
-        specifier: '*'
+        specifier: ^1.2.19
         version: 1.2.21(@types/react@19.1.11)
 
   apps/web-admin:
     dependencies:
+      '@merchant/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@merchant/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -365,7 +368,7 @@ importers:
         version: 4.9.5
     devDependencies:
       '@types/bun':
-        specifier: '*'
+        specifier: ^1.2.19
         version: 1.2.21(@types/react@19.1.11)
 
   services/ecom:
@@ -384,7 +387,7 @@ importers:
         version: 4.1.5
     devDependencies:
       '@types/bun':
-        specifier: '*'
+        specifier: ^1.2.19
         version: 1.2.21(@types/react@19.1.11)
 
   services/user:
@@ -403,7 +406,7 @@ importers:
         version: 4.1.5
     devDependencies:
       '@types/bun':
-        specifier: latest
+        specifier: ^1.2.19
         version: 1.2.21(@types/react@19.1.11)
 
 packages:
