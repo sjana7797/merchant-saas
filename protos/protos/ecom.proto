@@ -1,16 +1,17 @@
 syntax = "proto3";
 package ecom;
 
+import "health.proto";
+import "paginated.proto";
+
 service EcomService {
   rpc GetProduct(GetProductRequest) returns (GetProductResponse);
-  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
+  rpc GetProducts(paginated.PaginatedRequest) returns (GetProductsResponse);
+  rpc GetHealth(health.GetHealthRequest) returns (health.GetHealthResponse);
 }
 
 message GetProductRequest {
     string product_id = 1;
-}
-
-message GetHealthRequest {
 }
 
 message GetProductResponse {
@@ -21,6 +22,9 @@ message GetProductResponse {
     string org_id = 5;
 }
 
-message GetHealthResponse {
-  string message = 1;
+message GetProductsResponse {
+    repeated GetProductResponse products = 1;
+    int32 total_count = 2;
+    int32 page = 3;
+    optional int32  next_cursor = 4;
 }

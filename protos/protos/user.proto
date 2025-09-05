@@ -1,25 +1,19 @@
 syntax = "proto3";
+
 package user;
+
+import "health.proto";
+import "paginated.proto";
 
 
 service UserService {
-  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+  rpc GetUsers(paginated.PaginatedRequest) returns (GetUsersResponse);
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
-  rpc GetCustomers(GetCustomersRequest) returns (GetUsersResponse);
+  rpc GetCustomers(paginated.PaginatedRequestWithOrg) returns (GetUsersResponse);
   rpc GetCustomer(GetCustomerRequest) returns (GetUserResponse);
-  rpc GetHealth(GetHealthRequest) returns (GetHealthResponse);
+  rpc GetHealth(health.GetHealthRequest) returns (health.GetHealthResponse);
 }
 
-message GetUsersRequest {
-    int32 limit = 1;
-    int32 page = 2;
-}
-
-message GetCustomersRequest {
-    int32 limit = 1;
-    int32 page = 2;
-    string org_id = 3;
-}
 
 
 message GetUsersResponse {
@@ -47,10 +41,3 @@ message GetUserResponse {
 }
 
 
-message GetHealthRequest {
-}
-
-
-message GetHealthResponse {
-  string message = 1;
-}

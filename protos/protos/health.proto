@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package health;
+
+message GetHealthRequest {
+}
+
+
+message GetHealthResponse {
+  string message = 1;
+}

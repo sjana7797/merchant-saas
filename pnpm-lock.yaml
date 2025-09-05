@@ -70,6 +70,9 @@ importers:
 
   apps/web-admin:
     dependencies:
+      '@merchant/api-config':
+        specifier: workspace:*
+        version: link:../../packages/api-config
       '@merchant/db':
         specifier: workspace:*
         version: link:../../packages/db

@@ -5,12 +5,23 @@ import type {
   ServerStatusResponse,
 } from "@/graphql/types";
 import { ServerService } from "@/utils/server-health";
+import { httpStatusCodes, Logger } from "@merchant/api-config";
 import { db } from "@merchant/db";
 import { eq } from "@merchant/db/lib";
 import { servers } from "@merchant/db/schema/servers";
 
 export async function getServers(): Promise<Server[]> {
+  Logger.info({
+    message: "Fetching servers",
+    statusCode: httpStatusCodes.CONTINUE,
+  });
   const serversResults = await db.select().from(servers);
+
+  Logger.info({
+    message: "Received servers",
+    statusCode: httpStatusCodes.OK,
+    details: serversResults,
+  });
 
   return serversResults;
 }
@@ -29,7 +40,11 @@ export async function addServer(
 
     return serverResult.at(0)!;
   } catch (error) {
-    console.error(error);
+    Logger.error({
+      message: "Failed to Add Server",
+      statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
+      details: error,
+    });
     return null;
   }
 }

@@ -5,6 +5,7 @@ import { app } from "@getcronit/pylon";
 import { proxy } from "hono/proxy";
 import { routes } from "./routes";
 import { cors } from "hono/cors";
+import { Logger, httpStatusCodes } from "@merchant/api-config";
 
 export const graphql = {
   Query: {
@@ -35,7 +36,10 @@ routes.forEach((route) => {
 
 // Auth services
 app.on(["POST", "GET"], "/auth/:path", (c) => {
-  console.log("Proxying to Auth Service");
+  Logger.info({
+    message: "Proxying to Auth Service",
+    statusCode: httpStatusCodes.CONTINUE,
+  });
   return proxy(`http://localhost:5001/api/auth/${c.req.param("path")}`);
 });
 

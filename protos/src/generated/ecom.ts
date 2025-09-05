@@ -18,14 +18,13 @@ import {
   type ServiceError,
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
+import { GetHealthRequest, GetHealthResponse } from "./health";
+import { PaginatedRequest } from "./paginated";
 
 export const protobufPackage = "ecom";
 
 export interface GetProductRequest {
   productId: string;
-}
-
-export interface GetHealthRequest {
 }
 
 export interface GetProductResponse {
@@ -36,8 +35,11 @@ export interface GetProductResponse {
   orgId: string;
 }
 
-export interface GetHealthResponse {
-  message: string;
+export interface GetProductsResponse {
+  products: GetProductResponse[];
+  totalCount: number;
+  page: number;
+  nextCursor?: number | undefined;
 }
 
 function createBaseGetProductRequest(): GetProductRequest {
@@ -94,49 +96,6 @@ export const GetProductRequest: MessageFns<GetProductRequest> = {
   fromPartial(object: DeepPartial<GetProductRequest>): GetProductRequest {
     const message = createBaseGetProductRequest();
     message.productId = object.productId ?? "";
-    return message;
-  },
-};
-
-function createBaseGetHealthRequest(): GetHealthRequest {
-  return {};
-}
-
-export const GetHealthRequest: MessageFns<GetHealthRequest> = {
-  encode(_: GetHealthRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GetHealthRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetHealthRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): GetHealthRequest {
-    return {};
-  },
-
-  toJSON(_: GetHealthRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create(base?: DeepPartial<GetHealthRequest>): GetHealthRequest {
-    return GetHealthRequest.fromPartial(base ?? {});
-  },
-  fromPartial(_: DeepPartial<GetHealthRequest>): GetHealthRequest {
-    const message = createBaseGetHealthRequest();
     return message;
   },
 };
@@ -265,22 +224,31 @@ export const GetProductResponse: MessageFns<GetProductResponse> = {
   },
 };
 
-function createBaseGetHealthResponse(): GetHealthResponse {
-  return { message: "" };
+function createBaseGetProductsResponse(): GetProductsResponse {
+  return { products: [], totalCount: 0, page: 0, nextCursor: undefined };
 }
 
-export const GetHealthResponse: MessageFns<GetHealthResponse> = {
-  encode(message: GetHealthResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.message !== "") {
-      writer.uint32(10).string(message.message);
+export const GetProductsResponse: MessageFns<GetProductsResponse> = {
+  encode(message: GetProductsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.products) {
+      GetProductResponse.encode(v!, writer.uint32(10).fork()).join();
+    }
+    if (message.totalCount !== 0) {
+      writer.uint32(16).int32(message.totalCount);
+    }
+    if (message.page !== 0) {
+      writer.uint32(24).int32(message.page);
+    }
+    if (message.nextCursor !== undefined) {
+      writer.uint32(32).int32(message.nextCursor);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetHealthResponse {
+  decode(input: BinaryReader | Uint8Array, length?: number): GetProductsResponse {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetHealthResponse();
+    const message = createBaseGetProductsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -289,7 +257,31 @@ export const GetHealthResponse: MessageFns<GetHealthResponse> = {
             break;
           }
 
-          message.message = reader.string();
+          message.products.push(GetProductResponse.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 2: {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.totalCount = reader.int32();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+        }
+        case 4: {
+          if (tag !== 32) {
+            break;
+          }
+
+          message.nextCursor = reader.int32();
           continue;
         }
       }
@@ -301,24 +293,43 @@ export const GetHealthResponse: MessageFns<GetHealthResponse> = {
     return message;
   },
 
-  fromJSON(object: any): GetHealthResponse {
-    return { message: isSet(object.message) ? globalThis.String(object.message) : "" };
+  fromJSON(object: any): GetProductsResponse {
+    return {
+      products: globalThis.Array.isArray(object?.products)
+        ? object.products.map((e: any) => GetProductResponse.fromJSON(e))
+        : [],
+      totalCount: isSet(object.totalCount) ? globalThis.Number(object.totalCount) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+      nextCursor: isSet(object.nextCursor) ? globalThis.Number(object.nextCursor) : undefined,
+    };
   },
 
-  toJSON(message: GetHealthResponse): unknown {
+  toJSON(message: GetProductsResponse): unknown {
     const obj: any = {};
-    if (message.message !== "") {
-      obj.message = message.message;
+    if (message.products?.length) {
+      obj.products = message.products.map((e) => GetProductResponse.toJSON(e));
+    }
+    if (message.totalCount !== 0) {
+      obj.totalCount = Math.round(message.totalCount);
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    if (message.nextCursor !== undefined) {
+      obj.nextCursor = Math.round(message.nextCursor);
     }
     return obj;
   },
 
-  create(base?: DeepPartial<GetHealthResponse>): GetHealthResponse {
-    return GetHealthResponse.fromPartial(base ?? {});
+  create(base?: DeepPartial<GetProductsResponse>): GetProductsResponse {
+    return GetProductsResponse.fromPartial(base ?? {});
   },
-  fromPartial(object: DeepPartial<GetHealthResponse>): GetHealthResponse {
-    const message = createBaseGetHealthResponse();
-    message.message = object.message ?? "";
+  fromPartial(object: DeepPartial<GetProductsResponse>): GetProductsResponse {
+    const message = createBaseGetProductsResponse();
+    message.products = object.products?.map((e) => GetProductResponse.fromPartial(e)) || [];
+    message.totalCount = object.totalCount ?? 0;
+    message.page = object.page ?? 0;
+    message.nextCursor = object.nextCursor ?? undefined;
     return message;
   },
 };
@@ -334,6 +345,15 @@ export const EcomServiceService = {
     responseSerialize: (value: GetProductResponse): Buffer => Buffer.from(GetProductResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetProductResponse => GetProductResponse.decode(value),
   },
+  getProducts: {
+    path: "/ecom.EcomService/GetProducts",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: PaginatedRequest): Buffer => Buffer.from(PaginatedRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PaginatedRequest => PaginatedRequest.decode(value),
+    responseSerialize: (value: GetProductsResponse): Buffer => Buffer.from(GetProductsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer): GetProductsResponse => GetProductsResponse.decode(value),
+  },
   getHealth: {
     path: "/ecom.EcomService/GetHealth",
     requestStream: false,
@@ -347,6 +367,7 @@ export const EcomServiceService = {
 
 export interface EcomServiceServer extends UntypedServiceImplementation {
   getProduct: handleUnaryCall<GetProductRequest, GetProductResponse>;
+  getProducts: handleUnaryCall<PaginatedRequest, GetProductsResponse>;
   getHealth: handleUnaryCall<GetHealthRequest, GetHealthResponse>;
 }
 
@@ -365,6 +386,21 @@ export interface EcomServiceClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetProductResponse) => void,
+  ): ClientUnaryCall;
+  getProducts(
+    request: PaginatedRequest,
+    callback: (error: ServiceError | null, response: GetProductsResponse) => void,
+  ): ClientUnaryCall;
+  getProducts(
+    request: PaginatedRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetProductsResponse) => void,
+  ): ClientUnaryCall;
+  getProducts(
+    request: PaginatedRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetProductsResponse) => void,
   ): ClientUnaryCall;
   getHealth(
     request: GetHealthRequest,

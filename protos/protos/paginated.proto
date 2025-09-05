@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package paginated;
+
+
+
+message PaginatedRequest {
+  int32 limit = 1;
+  int32 page = 2;
+}
+
+message PaginatedRequestWithOrg {
+  int32 limit = 1;
+  int32 page = 2;
+  string org_id = 3;
+}

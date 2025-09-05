@@ -1,5 +1,6 @@
 import { Product } from "@/graphql/types";
 import { ecomClient } from "@/utils/client";
+import { httpStatusCodes, Logger } from "@merchant/api-config";
 import { GetProductRequest } from "@merchant/proto/ecom";
 
 export async function getProduct(
@@ -11,7 +12,11 @@ export async function getProduct(
       if (err) {
         reject(err);
       } else {
-        console.log("Response:", response, err);
+        Logger.info({
+          message: "Received GetProduct response",
+          statusCode: httpStatusCodes.OK,
+          details: response,
+        });
         resolve(response);
       }
     });

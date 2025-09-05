@@ -1,8 +1,8 @@
 import { EcomServiceServer } from "@merchant/proto/ecom";
-import { getProduct } from "./products";
+import * as productResolvers from "./products";
 import { getHealth } from "./health";
 
 export const impl: EcomServiceServer = {
-  getProduct,
   getHealth,
+  ...productResolvers,
 };

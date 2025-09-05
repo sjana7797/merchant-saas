@@ -1,5 +1,6 @@
 import { GetUsersResponse, PaginatedRequest, User } from "@/graphql/types";
 import { userClient } from "@/utils/client";
+import { httpStatusCodes, Logger } from "@merchant/api-config";
 
 export async function getUsers(
   paginatedRequest: PaginatedRequest
@@ -12,7 +13,11 @@ export async function getUsers(
         if (err) {
           reject(err);
         } else {
-          console.log("Response:", response, err);
+          Logger.info({
+            message: "Received GetUsers response",
+            statusCode: httpStatusCodes.OK,
+            details: response,
+          });
           resolve(response);
         }
       }

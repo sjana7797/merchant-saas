@@ -18,19 +18,10 @@ import {
   type ServiceError,
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
+import { GetHealthRequest, GetHealthResponse } from "./health";
+import { PaginatedRequest, PaginatedRequestWithOrg } from "./paginated";
 
 export const protobufPackage = "user";
-
-export interface GetUsersRequest {
-  limit: number;
-  page: number;
-}
-
-export interface GetCustomersRequest {
-  limit: number;
-  page: number;
-  orgId: string;
-}
 
 export interface GetUsersResponse {
   users: GetUserResponse[];
@@ -55,181 +46,6 @@ export interface GetUserResponse {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface GetHealthRequest {
-}
-
-export interface GetHealthResponse {
-  message: string;
-}
-
-function createBaseGetUsersRequest(): GetUsersRequest {
-  return { limit: 0, page: 0 };
-}
-
-export const GetUsersRequest: MessageFns<GetUsersRequest> = {
-  encode(message: GetUsersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.limit !== 0) {
-      writer.uint32(8).int32(message.limit);
-    }
-    if (message.page !== 0) {
-      writer.uint32(16).int32(message.page);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GetUsersRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUsersRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.limit = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.page = reader.int32();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetUsersRequest {
-    return {
-      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-    };
-  },
-
-  toJSON(message: GetUsersRequest): unknown {
-    const obj: any = {};
-    if (message.limit !== 0) {
-      obj.limit = Math.round(message.limit);
-    }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    return obj;
-  },
-
-  create(base?: DeepPartial<GetUsersRequest>): GetUsersRequest {
-    return GetUsersRequest.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<GetUsersRequest>): GetUsersRequest {
-    const message = createBaseGetUsersRequest();
-    message.limit = object.limit ?? 0;
-    message.page = object.page ?? 0;
-    return message;
-  },
-};
-
-function createBaseGetCustomersRequest(): GetCustomersRequest {
-  return { limit: 0, page: 0, orgId: "" };
-}
-
-export const GetCustomersRequest: MessageFns<GetCustomersRequest> = {
-  encode(message: GetCustomersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.limit !== 0) {
-      writer.uint32(8).int32(message.limit);
-    }
-    if (message.page !== 0) {
-      writer.uint32(16).int32(message.page);
-    }
-    if (message.orgId !== "") {
-      writer.uint32(26).string(message.orgId);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GetCustomersRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetCustomersRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.limit = reader.int32();
-          continue;
-        }
-        case 2: {
-          if (tag !== 16) {
-            break;
-          }
-
-          message.page = reader.int32();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
-          message.orgId = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetCustomersRequest {
-    return {
-      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      orgId: isSet(object.orgId) ? globalThis.String(object.orgId) : "",
-    };
-  },
-
-  toJSON(message: GetCustomersRequest): unknown {
-    const obj: any = {};
-    if (message.limit !== 0) {
-      obj.limit = Math.round(message.limit);
-    }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    if (message.orgId !== "") {
-      obj.orgId = message.orgId;
-    }
-    return obj;
-  },
-
-  create(base?: DeepPartial<GetCustomersRequest>): GetCustomersRequest {
-    return GetCustomersRequest.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<GetCustomersRequest>): GetCustomersRequest {
-    const message = createBaseGetCustomersRequest();
-    message.limit = object.limit ?? 0;
-    message.page = object.page ?? 0;
-    message.orgId = object.orgId ?? "";
-    return message;
-  },
-};
 
 function createBaseGetUsersResponse(): GetUsersResponse {
   return { users: [], totalCount: 0, page: 0, nextCursor: undefined };
@@ -597,115 +413,14 @@ export const GetUserResponse: MessageFns<GetUserResponse> = {
   },
 };
 
-function createBaseGetHealthRequest(): GetHealthRequest {
-  return {};
-}
-
-export const GetHealthRequest: MessageFns<GetHealthRequest> = {
-  encode(_: GetHealthRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GetHealthRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetHealthRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): GetHealthRequest {
-    return {};
-  },
-
-  toJSON(_: GetHealthRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create(base?: DeepPartial<GetHealthRequest>): GetHealthRequest {
-    return GetHealthRequest.fromPartial(base ?? {});
-  },
-  fromPartial(_: DeepPartial<GetHealthRequest>): GetHealthRequest {
-    const message = createBaseGetHealthRequest();
-    return message;
-  },
-};
-
-function createBaseGetHealthResponse(): GetHealthResponse {
-  return { message: "" };
-}
-
-export const GetHealthResponse: MessageFns<GetHealthResponse> = {
-  encode(message: GetHealthResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.message !== "") {
-      writer.uint32(10).string(message.message);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): GetHealthResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetHealthResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.message = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetHealthResponse {
-    return { message: isSet(object.message) ? globalThis.String(object.message) : "" };
-  },
-
-  toJSON(message: GetHealthResponse): unknown {
-    const obj: any = {};
-    if (message.message !== "") {
-      obj.message = message.message;
-    }
-    return obj;
-  },
-
-  create(base?: DeepPartial<GetHealthResponse>): GetHealthResponse {
-    return GetHealthResponse.fromPartial(base ?? {});
-  },
-  fromPartial(object: DeepPartial<GetHealthResponse>): GetHealthResponse {
-    const message = createBaseGetHealthResponse();
-    message.message = object.message ?? "";
-    return message;
-  },
-};
-
 export type UserServiceService = typeof UserServiceService;
 export const UserServiceService = {
   getUsers: {
     path: "/user.UserService/GetUsers",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetUsersRequest): Buffer => Buffer.from(GetUsersRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetUsersRequest => GetUsersRequest.decode(value),
+    requestSerialize: (value: PaginatedRequest): Buffer => Buffer.from(PaginatedRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PaginatedRequest => PaginatedRequest.decode(value),
     responseSerialize: (value: GetUsersResponse): Buffer => Buffer.from(GetUsersResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetUsersResponse => GetUsersResponse.decode(value),
   },
@@ -722,8 +437,9 @@ export const UserServiceService = {
     path: "/user.UserService/GetCustomers",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: GetCustomersRequest): Buffer => Buffer.from(GetCustomersRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetCustomersRequest => GetCustomersRequest.decode(value),
+    requestSerialize: (value: PaginatedRequestWithOrg): Buffer =>
+      Buffer.from(PaginatedRequestWithOrg.encode(value).finish()),
+    requestDeserialize: (value: Buffer): PaginatedRequestWithOrg => PaginatedRequestWithOrg.decode(value),
     responseSerialize: (value: GetUsersResponse): Buffer => Buffer.from(GetUsersResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer): GetUsersResponse => GetUsersResponse.decode(value),
   },
@@ -748,25 +464,25 @@ export const UserServiceService = {
 } as const;
 
 export interface UserServiceServer extends UntypedServiceImplementation {
-  getUsers: handleUnaryCall<GetUsersRequest, GetUsersResponse>;
+  getUsers: handleUnaryCall<PaginatedRequest, GetUsersResponse>;
   getUser: handleUnaryCall<GetUserRequest, GetUserResponse>;
-  getCustomers: handleUnaryCall<GetCustomersRequest, GetUsersResponse>;
+  getCustomers: handleUnaryCall<PaginatedRequestWithOrg, GetUsersResponse>;
   getCustomer: handleUnaryCall<GetCustomerRequest, GetUserResponse>;
   getHealth: handleUnaryCall<GetHealthRequest, GetHealthResponse>;
 }
 
 export interface UserServiceClient extends Client {
   getUsers(
-    request: GetUsersRequest,
+    request: PaginatedRequest,
     callback: (error: ServiceError | null, response: GetUsersResponse) => void,
   ): ClientUnaryCall;
   getUsers(
-    request: GetUsersRequest,
+    request: PaginatedRequest,
     metadata: Metadata,
     callback: (error: ServiceError | null, response: GetUsersResponse) => void,
   ): ClientUnaryCall;
   getUsers(
-    request: GetUsersRequest,
+    request: PaginatedRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetUsersResponse) => void,
@@ -787,16 +503,16 @@ export interface UserServiceClient extends Client {
     callback: (error: ServiceError | null, response: GetUserResponse) => void,
   ): ClientUnaryCall;
   getCustomers(
-    request: GetCustomersRequest,
+    request: PaginatedRequestWithOrg,
     callback: (error: ServiceError | null, response: GetUsersResponse) => void,
   ): ClientUnaryCall;
   getCustomers(
-    request: GetCustomersRequest,
+    request: PaginatedRequestWithOrg,
     metadata: Metadata,
     callback: (error: ServiceError | null, response: GetUsersResponse) => void,
   ): ClientUnaryCall;
   getCustomers(
-    request: GetCustomersRequest,
+    request: PaginatedRequestWithOrg,
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: GetUsersResponse) => void,

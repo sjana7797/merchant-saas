@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@merchant/ui/components/select";
+import { httpStatusCodes, Logger } from "@merchant/api-config";
 
 function AddServerForm() {
   const addServerForm = useForm<AddServerSchema>({
@@ -87,7 +88,11 @@ const AddServerFormComponent = ({
       formContext.reset();
       closeDialog();
     } catch (error) {
-      console.error(error);
+      Logger.info({
+        message: "Failed to add server",
+        statusCode: httpStatusCodes.INTERNAL_SERVER_ERROR,
+        details: error,
+      });
     }
   };
 

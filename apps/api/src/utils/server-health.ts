@@ -1,5 +1,6 @@
 import { Server } from "@/graphql/types";
 import { servers } from "./client";
+import { httpStatusCodes, Logger } from "@merchant/api-config";
 
 export interface ServerHealth {
   getHealth: () => Promise<boolean>;
@@ -14,7 +15,13 @@ export class GRPCHealth implements ServerHealth {
     return new Promise<boolean>((resolve) => {
       client.getHealth({}, (err, response) => {
         const status = !err && response?.message === "OK";
-        console.log(`Health check for port ${this.port}:`, status);
+        Logger.info({
+          message: "Received GetHealth response",
+          statusCode: status
+            ? httpStatusCodes.OK
+            : httpStatusCodes.INTERNAL_SERVER_ERROR,
+          details: response,
+        });
         resolve(status);
       });
     });
