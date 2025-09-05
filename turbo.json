@@ -8,6 +8,9 @@
     "dev": {
       "cache": false,
       "persistent": false
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
     }
   }
 }

@@ -1,0 +1,3 @@
+{
+  "extends": "@merchant/typescript-config/base.json"
+}

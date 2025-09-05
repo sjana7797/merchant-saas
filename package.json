@@ -7,18 +7,26 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "syncpack:fix": "syncpack fix",
-    "postinstall": "pnpm syncpack:fix"
+    "postinstall": "pnpm syncpack:fix",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.9.0",
   "devDependencies": {
+    "@merchant/eslint-config": "workspace:*",
+    "@merchant/typescript-config": "workspace:*",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "grpc-tools": "^1.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
     "protoc-gen-ts": "^0.8.7",
     "syncpack": "14.0.0-alpha.19",
-    "turbo": "^2.5.6",
-    "typescript": "^5"
+    "turbo": "^2.5.6"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",
