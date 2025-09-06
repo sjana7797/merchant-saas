@@ -1,36 +1,121 @@
-import type { SidebarMenuItem } from "@/types/sidebar";
-import { MENUS } from "./routes";
+import type { NavMain, SidebarMenuItem } from "@/types/sidebar";
 import {
+  BookOpen,
+  Building,
   ChartPie,
   MessageSquareText,
   Server,
   Settings,
   Settings2,
+  User2,
 } from "lucide-react";
 
 export const menus: SidebarMenuItem[] = [
   {
     title: "Servers Health",
-    url: MENUS.SERVERS_ROUTE,
+    url: "/servers",
     icon: Server,
     key: "servers",
   },
   {
     title: "Sales & Marketing",
-    url: MENUS.SALES_MARKETING_ROUTE,
+    url: "/sales&marketing",
     icon: ChartPie,
     key: "sales",
   },
   {
     title: "Chat & Support",
-    url: MENUS.CHAT_SUPPORT_ROUTE,
+    url: "/chat-support",
     icon: MessageSquareText,
     key: "chat-support",
   },
   {
     title: "Settings",
-    url: MENUS.SETTINGS,
+    url: "/settings",
     icon: Settings,
     key: "settings",
+  },
+];
+
+export const navMain: NavMain[] = [
+  {
+    title: "Users",
+    url: "/",
+    icon: User2,
+    items: [
+      {
+        title: "All Users",
+        url: "#",
+      },
+      {
+        title: "Add User",
+        url: "#",
+      },
+    ],
+  },
+  {
+    title: "Organizations",
+    url: "#",
+    icon: Building,
+    items: [
+      {
+        title: "All Organizations",
+        url: "#",
+      },
+      {
+        title: "Explorer",
+        url: "#",
+      },
+      {
+        title: "Quantum",
+        url: "#",
+      },
+    ],
+  },
+  {
+    title: "Products",
+    url: "#",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Introduction",
+        url: "#",
+      },
+      {
+        title: "Get Started",
+        url: "#",
+      },
+      {
+        title: "Tutorials",
+        url: "#",
+      },
+      {
+        title: "Changelog",
+        url: "#",
+      },
+    ],
+  },
+  {
+    title: "Settings",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "General",
+        url: "#",
+      },
+      {
+        title: "Team",
+        url: "#",
+      },
+      {
+        title: "Billing",
+        url: "#",
+      },
+      {
+        title: "Limits",
+        url: "#",
+      },
+    ],
   },
 ];

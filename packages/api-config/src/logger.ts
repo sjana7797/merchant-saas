@@ -1,5 +1,3 @@
-import * as httpStatusCodes from "./http-status-codes";
-
 /* eslint-disable no-console */
 const reset = "\x1b[0m"; // Reset color to default;
 
@@ -19,7 +17,7 @@ export class Logger {
       `[${timestamp}] ${red}ERROR:${reset}`,
       message,
       statusCode,
-      details ? details : ""
+      details ? details : "",
     );
   }
 
@@ -33,7 +31,7 @@ export class Logger {
       `[${timestamp}] ${green}SUCCESS:${reset}`,
       message,
       statusCode,
-      details ? details : ""
+      details ? details : "",
     );
   }
 
@@ -47,7 +45,7 @@ export class Logger {
       `[${timestamp}] ${blue}INFO:${reset}`,
       message,
       statusCode,
-      details ? details : ""
+      details ? details : "",
     );
   }
 
@@ -61,7 +59,7 @@ export class Logger {
       `[${timestamp}] ${yellow}WARNING:${reset}`,
       message,
       statusCode,
-      details ? details : ""
+      details ? details : "",
     );
   }
 }

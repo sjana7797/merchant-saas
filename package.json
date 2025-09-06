@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "turbo run dev --parallel",
+    "dev": "turbo run dev db:studio --parallel",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "syncpack:fix": "syncpack fix",

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@merchant/ui/components",
+    "utils": "@merchant/ui/lib/utils",
+    "hooks": "@merchant/ui/hooks",
+    "lib": "@merchant/ui/lib",
+    "ui": "@merchant/ui/components"
+  }
+}

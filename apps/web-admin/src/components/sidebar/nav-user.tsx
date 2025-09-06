@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   BadgeCheck,
@@ -7,13 +7,13 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react"
+} from "lucide-react";
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@merchant/ui/components/avatar"
+} from "@merchant/ui/components/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,24 +22,25 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@merchant/ui/components/dropdown-menu"
+} from "@merchant/ui/components/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@merchant/ui/components/sidebar"
+} from "@merchant/ui/components/sidebar";
+import { authClient } from "@merchant/auth/auth-client";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
-  const { isMobile } = useSidebar()
+export function NavUser() {
+  const { isMobile } = useSidebar();
+
+  const { data, isPending } = authClient.useSession.get();
+
+  const user = {
+    name: data?.user?.name ?? "Anonymous",
+    email: data?.user?.email ?? "anon@anon.com",
+    avatar: data?.user?.image ?? "/avatars/anon.jpg",
+  };
 
   return (
     <SidebarMenu>
@@ -71,7 +72,7 @@ export function NavUser({
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">A</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -110,5 +111,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

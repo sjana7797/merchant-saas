@@ -3,7 +3,6 @@ import * as serverResolver from "./graphql/server";
 import * as userResolver from "./graphql/user";
 import * as cartResolver from "./graphql/cart";
 import { app } from "@getcronit/pylon";
-import { proxy } from "hono/proxy";
 import { routes } from "./routes";
 import { cors } from "hono/cors";
 import { Logger, httpStatusCodes } from "@merchant/api-config";
@@ -23,8 +22,8 @@ export const graphql = {
 app.use(
   "/*",
   cors({
-    origin: ["http://localhost:3000"],
-    allowMethods: ["GET", "POST", "OPTIONS"],
+    origin: ["http://localhost:3000", "http://localhost:5173"],
+    allowMethods: ["GET", "POST", "OPTIONS", "PATCH"],
     allowHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
@@ -36,12 +35,23 @@ routes.forEach((route) => {
 });
 
 // Auth services
-app.on(["POST", "GET"], "/auth/:path", (c) => {
+app.all("/auth/*", async (c) => {
+  const subPath = c.req.path.replace(/^\/auth\//, "");
   Logger.info({
     message: "Proxying to Auth Service",
     statusCode: httpStatusCodes.CONTINUE,
+    details: `${c.req.path} to http://localhost:5001/api/auth/${subPath}`,
   });
-  return proxy(`http://localhost:5001/api/auth/${c.req.param("path")}`);
+  const target = `http://localhost:5001/api/auth/${subPath}`;
+  return fetch(target, {
+    method: c.req.method,
+    headers: c.req.raw.headers,
+    body:
+      c.req.method !== "GET" && c.req.method !== "HEAD"
+        ? await c.req.arrayBuffer()
+        : undefined,
+    credentials: "include",
+  });
 });
 
 Bun.serve({

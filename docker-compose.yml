@@ -9,11 +9,13 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
 
   redis:
     image: redis:7
     ports: ["6379:6379"]
+    volumes:
+      - ./data/redis:/data
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -21,18 +23,33 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     ports: ["5672:5672", "15672:15672"]
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
 
   minio:
     image: minio/minio
-    command: server /data
+    command: server /data --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
     ports: ["9000:9000", "9001:9001"]
+    volumes:
+      - ./data/minio:/data
 
   mailhog:
     image: mailhog/mailhog
     ports: ["1025:1025", "8025:8025"]
+    # MailHog doesn't need persistence, but you can add it if you want
+    volumes:
+      - ./data/mailhog:/mailhog
 
-volumes:
-  db_data:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-minio
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./data/nginx/cache:/var/cache/nginx
+    depends_on:
+      - minio
+    ports:
+      - "9005:80"

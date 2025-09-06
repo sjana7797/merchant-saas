@@ -6,6 +6,8 @@ import ServerCard from "./server-card";
 import AddServerForm from "./add-server-form";
 import { Loader2 } from "lucide-react";
 import Render from "@merchant/ui/components/render";
+import Loading from "@merchant/ui/illustrations/loading";
+import EmptyData from "@merchant/ui/illustrations/empty-data";
 
 function ServerList() {
   const { data, refetch, isFetching, isLoading } = api.useGetServers();
@@ -29,11 +31,19 @@ function ServerList() {
           <AddServerForm />
         </div>
       </div>
-      <ul className="grid auto-rows-min gap-4 md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1">
-        {data?.map((server) => (
-          <ServerCard server={server} key={server.id} />
-        ))}
-      </ul>
+      <Render condition={isLoading}>
+        <Loading className="w-full max-w-2xl mx-auto p-4" />
+      </Render>
+      <Render condition={!isLoading && !data?.length}>
+        <EmptyData className="w-full max-w-sm mx-auto p-4 my-5" />
+      </Render>
+      <Render condition={!isLoading && !!data?.length}>
+        <ul className="grid auto-rows-min gap-4 md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1">
+          {data?.map((server) => (
+            <ServerCard server={server} key={server.id} />
+          ))}
+        </ul>
+      </Render>
     </section>
   );
 }

@@ -3,7 +3,8 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "cache": true
+      "cache": true,
+      "outputs": ["dist/**", ".next/**", "build/**"]
     },
     "dev": {
       "cache": false,
@@ -21,6 +22,10 @@
       "persistent": false
     },
     "db:generate": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:studio": {
       "cache": false,
       "persistent": true
     }

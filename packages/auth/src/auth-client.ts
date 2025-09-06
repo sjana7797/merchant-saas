@@ -3,4 +3,5 @@ import { adminClient, organizationClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
   plugins: [adminClient(), organizationClient()],
+  baseURL: process.env.NEXT_PUBLIC_AUTH_URL + "/auth",
 });
